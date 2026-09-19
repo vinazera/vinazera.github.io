@@ -1,21 +1,3 @@
-// 1. IMPORTAÇÕES DIRETA NO SEU ARQUIVO JS (Não precisa mais do window.fb)
-import { initializeApp } from "https://gstatic.com";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://gstatic.com";
-
-// 2. COLE AQUI AS SUAS CREDENCIAIS DO APP DA WEB REAL DO GOOGLE
-const firebaseConfig = {
-    apiKey: "SUA_API_KEY_REAL",
-    authDomain: "SEU_://firebaseapp.com",
-    projectId: "SEU_PROJETO_REAL",
-    storageBucket: "SEU_://appspot.com",
-    messagingSenderId: "12345678",
-    appId: "1:1234:web:1234"
-};
-
-// 3. INICIALIZA O BANCO AQUI DENTRO
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
 // Seus elementos da página (Mantenha igual ao seu)
 const fileInput = document.getElementById('fileInput');
 const userNameInput = document.getElementById('userName');
