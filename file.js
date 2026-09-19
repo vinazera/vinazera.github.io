@@ -1,3 +1,22 @@
+// 1. IMPORTAÇÕES DIRETA NO SEU ARQUIVO JS (Não precisa mais do window.fb)
+import { initializeApp } from "https://gstatic.com";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://gstatic.com";
+
+// 2. COLE AQUI AS SUAS CREDENCIAIS DO APP DA WEB REAL DO GOOGLE
+const firebaseConfig = {
+    apiKey: "SUA_API_KEY_REAL",
+    authDomain: "SEU_://firebaseapp.com",
+    projectId: "SEU_PROJETO_REAL",
+    storageBucket: "SEU_://appspot.com",
+    messagingSenderId: "12345678",
+    appId: "1:1234:web:1234"
+};
+
+// 3. INICIALIZA O BANCO AQUI DENTRO
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Seus elementos da página (Mantenha igual ao seu)
 const fileInput = document.getElementById('fileInput');
 const userNameInput = document.getElementById('userName');
 const photoCaptionInput = document.getElementById('photoCaption');
@@ -15,22 +34,7 @@ uploadBtn.addEventListener('click', () => {
 });
 
 fileInput.addEventListener('change', async function () {
-    const file = this.files[0];
-    const name = userNameInput.value;
-    const caption = photoCaptionInput.value;
-
-    if (!file || !name || !caption) {
-        alert("Por favor, preencha todos os campos e selecione uma foto! ❤️");
-        return;
-    }
-
-    uploadBtn.innerText = "Enviando amor...";
-    uploadBtn.disabled = true;
-
-    try {
-        fileInput.addEventListener('change', async function () {
-    // CORREÇÃO 1: Pegar o arquivo correto da lista
-    const file = this.files[0]; 
+    const file = this.files[0]; // Correção: Pegar o primeiro arquivo
     const name = userNameInput.value;
     const caption = photoCaptionInput.value;
 
@@ -46,7 +50,7 @@ fileInput.addEventListener('change', async function () {
         const formData = new FormData();
         formData.append("image", file);
 
-        // CORREÇÃO 2: Endereço exato da API do Imgur para evitar o bloqueio de CORS
+        // Upload para o Imgur por debaixo dos panos
         const respostaImgur = await fetch("https://imgur.com", {
             method: "POST",
             headers: { 
@@ -63,8 +67,8 @@ fileInput.addEventListener('change', async function () {
 
         const url = resultadoImgur.data.link;
 
-        // 3. Salvar dados no Firestore
-        await window.fb.addDoc(window.fb.collection(window.fb.db, "galeria"), {
+        // Salvar dados diretamente no Firestore utilizando a nossa importação limpa
+        await addDoc(collection(db, "galeria"), {
             url: url,
             name: name,
             caption: caption,
@@ -87,43 +91,18 @@ fileInput.addEventListener('change', async function () {
     }
 });
 
-
-        // 3. Salvar dados no Firestore
-        await window.fb.addDoc(window.fb.collection(window.fb.db, "galeria"), {
-            url: url,
-            name: name,
-            caption: caption,
-            createdAt: Date.now()
-        });
-
-        alert("Foto enviada com sucesso! Obrigado por compartilhar! ✨");
-
-        // Limpar campos
-        userNameInput.value = '';
-        photoCaptionInput.value = '';
-        fileInput.value = '';
-
-        loadPhotos(); // Atualiza galeria
-    } catch (error) {
-        console.error("Erro:", error);
-        alert("Houve um erro ao enviar a foto. Tente novamente.");
-    } finally {
-        uploadBtn.innerText = "Selecionar Foto e Enviar";
-        uploadBtn.disabled = false;
-    }
-});
-
+// FUNÇÃO ATUALIZADA SEM WINDOW.FB
 async function loadPhotos() {
     try {
         photoGrid.innerHTML = '<div class="loader">Carregando memórias...</div>';
 
-        // Busca as fotos ordenando por data (mais recentes primeiro)
-        const q = window.fb.query(
-            window.fb.collection(window.fb.db, "galeria"),
-            window.fb.orderBy("createdAt", "desc")
+        // Busca direto no db local importado lá em cima
+        const q = query(
+            collection(db, "galeria"),
+            orderBy("createdAt", "desc")
         );
 
-        const querySnapshot = await window.fb.getDocs(q);
+        const querySnapshot = await getDocs(q);
         photoGrid.innerHTML = "";
 
         if (querySnapshot.empty) {
