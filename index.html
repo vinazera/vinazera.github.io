@@ -78,11 +78,23 @@
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+// Exportando para o file.js na hora certa
+window.fb = {
+    db: db,
+    collection: collection,
+    addDoc: addDoc,
+    getDocs: getDocs,
+    query: query,
+    orderBy: orderBy
+};
+
+// Carrega o file.js de forma totalmente segura
+const scriptLogica = document.createElement('script');
+scriptLogica.src = 'file.js';
+document.body.appendChild(scriptLogica);
 </script>
-        // Exportando para o script.js
-        window.fb = { db, storage, collection, addDoc, getDocs, query, orderBy, ref, uploadBytes, getDownloadURL };
-    </script>
-    <script src="file.js"></script>
 </body>
 
 </html>
