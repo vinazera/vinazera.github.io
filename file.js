@@ -28,27 +28,65 @@ fileInput.addEventListener('change', async function () {
     uploadBtn.disabled = true;
 
     try {
-        // 1. Prepara o arquivo para o Imgur por baixo dos panos
-const formData = new FormData();
-formData.append("image", file);
+        fileInput.addEventListener('change', async function () {
+    // CORREÇÃO 1: Pegar o arquivo correto da lista
+    const file = this.files[0]; 
+    const name = userNameInput.value;
+    const caption = photoCaptionInput.value;
 
-// 2. Envia para o servidor do Imgur de forma anônima e gratuita
-const respostaImgur = await fetch("https://imgur.com", {
-    method: "POST",
-    headers: { 
-        Authorization: "Client-ID 6e08dd18f4a7c1b" 
-    }, 
-    body: formData
+    if (!file || !name || !caption) {
+        alert("Por favor, preencha todos os campos e selecione uma foto! ❤️");
+        return;
+    }
+
+    uploadBtn.innerText = "Enviando amor...";
+    uploadBtn.disabled = true;
+
+    try {
+        const formData = new FormData();
+        formData.append("image", file);
+
+        // CORREÇÃO 2: Endereço exato da API do Imgur para evitar o bloqueio de CORS
+        const respostaImgur = await fetch("https://imgur.com", {
+            method: "POST",
+            headers: { 
+                Authorization: "Client-ID 6e08dd18f4a7c1b"
+            }, 
+            body: formData
+        });
+        
+        const resultadoImgur = await respostaImgur.json();
+
+        if (!resultadoImgur.success) {
+            throw new Error("O Imgur recusou o upload.");
+        }
+
+        const url = resultadoImgur.data.link;
+
+        // 3. Salvar dados no Firestore
+        await window.fb.addDoc(window.fb.collection(window.fb.db, "galeria"), {
+            url: url,
+            name: name,
+            caption: caption,
+            createdAt: Date.now()
+        });
+
+        alert("Foto enviada com sucesso! Obrigado por compartilhar! ✨");
+
+        userNameInput.value = '';
+        photoCaptionInput.value = '';
+        fileInput.value = '';
+
+        loadPhotos(); 
+    } catch (error) {
+        console.error("Erro:", error);
+        alert("Houve um erro ao enviar a foto. Tente novamente.");
+    } finally {
+        uploadBtn.innerText = "Selecionar Foto e Enviar";
+        uploadBtn.disabled = false;
+    }
 });
 
-const resultadoImgur = await respostaImgur.json();
-
-if (!resultadoImgur.success) {
-    throw new Error("O Imgur recusou o upload da imagem.");
-}
-
-// 3. Captura o link gerado pelo Imgur para mandar para o seu Firestore
-const url = resultadoImgur.data.link;
 
         // 3. Salvar dados no Firestore
         await window.fb.addDoc(window.fb.collection(window.fb.db, "galeria"), {
