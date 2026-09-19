@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosso Casamento | Galeria de Amor</title>
+    <link rel="stylesheet" href="file.css">
+    <!-- Fonte elegante do Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Montserrat:wght@300;400;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <header>
+        <div class="social-buttons">
+            <a href="instagram do lucas" target="_blank" class="btn-insta">Noivo</a>
+            <a href="https://www.instagram.com/amuzulao/?utm_source=ig_web_button_share_sheet" target="_blank"
+                class="btn-insta">Noiva</a>
+        </div>
+        <div class="logo">
+            <h1>Lucas & Amanda</h1>
+            <p class="date">28 de novembro de 2026</p>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <p class="welcome-text">Sejam bem-vindos ao nosso site! <br> Queremos guardar cada detalhe desse dia
+                    especial. Por favor, compartilhem as fotos que tirarem conosco!</p>
+                <img src="Logotipo de Casamento Monograma Botânico Delicado Verde.jpg" alt="" class="couple-photo" fotos
+                    logo>
+
+                <div class="upload-card">
+                    <h3>Compartilhe seu registro</h3>
+                    <div class="input-group">
+                        <input type="text" id="userName" placeholder="Seu nome">
+                        <input type="text" id="photoCaption" placeholder="Legenda da foto (ex: 'Que momento lindo!')">
+                        <input type="file" id="fileInput" accept="image/*" hidden>
+                        <button id="uploadBtn" class="btn-upload">Selecionar Foto e Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="gallery-section">
+            <h2>Momentos Capturados</h2>
+            <div id="photoGrid" class="photo-grid">
+                <!-- Fotos carregadas do Firebase aparecem aqui -->
+                <div class="loader">Carregando memórias...</div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Feito com ❤️ para celebrar o amor</p>
+    </footer>
+
+    <!-- CONFIGURAÇÃO FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "SEU_AUTH_DOMAIN",
+            projectId: "SEU_PROJECT_ID",
+            storageBucket: "SEU_STORAGE_BUCKET",
+            messagingSenderId: "SEU_SENDER_ID",
+            appId: "SEU_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // Exportando para o script.js
+        window.fb = { db, storage, collection, addDoc, getDocs, query, orderBy, ref, uploadBytes, getDownloadURL };
+    </script>
+    <script src="file.js"></script>
+</body>
+
+</html>
