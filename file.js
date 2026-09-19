@@ -75,6 +75,11 @@ fileInput.addEventListener('change', async function () {
 
 // FUNÇÃO ATUALIZADA SEM WINDOW.FB
 async function loadPhotos() {
+    if (!window.fb || !window.fb.db || !window.fb.query) {
+        setTimeout(loadPhotos, 200);
+        return;
+    }
+    
     try {
         photoGrid.innerHTML = '<div class="loader">Carregando memórias...</div>';
 
