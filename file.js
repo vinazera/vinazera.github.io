@@ -28,13 +28,27 @@ fileInput.addEventListener('change', async function () {
     uploadBtn.disabled = true;
 
     try {
-        // 1. Upload para o Storage (Pasta 'fotos/')
-        const fileName = `${Date.now()}_${file.name}`;
-        const storageRef = window.fb.ref(window.fb.storage, `fotos/${fileName}`);
-        await window.fb.uploadBytes(storageRef, file);
+        // 1. Prepara o arquivo para o Imgur por baixo dos panos
+const formData = new FormData();
+formData.append("image", file);
 
-        // 2. Obter a URL da imagem
-        const url = await window.fb.getDownloadURL(storageRef);
+// 2. Envia para o servidor do Imgur de forma anônima e gratuita
+const respostaImgur = await fetch("https://imgur.com", {
+    method: "POST",
+    headers: { 
+        Authorization: "Client-ID 6e08dd18f4a7c1b" 
+    }, 
+    body: formData
+});
+
+const resultadoImgur = await respostaImgur.json();
+
+if (!resultadoImgur.success) {
+    throw new Error("O Imgur recusou o upload da imagem.");
+}
+
+// 3. Captura o link gerado pelo Imgur para mandar para o seu Firestore
+const url = resultadoImgur.data.link;
 
         // 3. Salvar dados no Firestore
         await window.fb.addDoc(window.fb.collection(window.fb.db, "galeria"), {
