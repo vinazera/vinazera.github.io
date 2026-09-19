@@ -61,23 +61,24 @@
 
     <!-- CONFIGURAÇÃO FIREBASE -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
-        const firebaseConfig = {
-            apiKey: "SUA_API_KEY",
-            authDomain: "SEU_AUTH_DOMAIN",
-            projectId: "SEU_PROJECT_ID",
-            storageBucket: "SEU_STORAGE_BUCKET",
-            messagingSenderId: "SEU_SENDER_ID",
-            appId: "SEU_APP_ID"
-        };
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyA7Nx6Ak045K0CJZsvRusI8pS7kQp7iWBA",
+    authDomain: "casamento-galeria-36d02.firebaseapp.com",
+    projectId: "casamento-galeria-36d02",
+    storageBucket: "casamento-galeria-36d02.firebasestorage.app",
+    messagingSenderId: "102659965617",
+    appId: "1:102659965617:web:9e47e850fad68df28b5890"
+  };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
-
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
         // Exportando para o script.js
         window.fb = { db, storage, collection, addDoc, getDocs, query, orderBy, ref, uploadBytes, getDownloadURL };
     </script>
